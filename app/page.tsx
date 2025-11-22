@@ -1,13 +1,31 @@
+
+
 import { Button } from '@/components/ui/button'
-import prisma from '@/lib/prisma'
-import React from 'react'
+import { useTRPC } from '@/trpc/client'
+import { useQuery } from '@tanstack/react-query'
+import React, { Suspense } from 'react'
+import { trpc, getQueryClient } from '@/trpc/server';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { ClientGreeting } from './api/trpc/[trpc]/client';
 
 type Props = {}
 
 const Page = async (props: Props) => {
-  const users = await prisma.post.findMany()
+
+  const queryClient = getQueryClient()
+
+  void queryClient.prefetchQuery(trpc.hello.queryOptions({
+    text : "Kunal Prefetch"
+  }))
+  
   return (
-    <div>{JSON.stringify(users)}</div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <div>
+        <Suspense fallback={<p>Loading....</p>}>
+          <ClientGreeting/>
+        </Suspense>
+      </div>
+    </HydrationBoundary>
   )
 }
 
