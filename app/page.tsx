@@ -1,32 +1,31 @@
 
+"use client"
+import { Button } from "@/components/ui/button";
+import { useTRPC } from '@/trpc/client';
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
-import { Button } from '@/components/ui/button'
-import { useTRPC } from '@/trpc/client'
-import { useQuery } from '@tanstack/react-query'
-import React, { Suspense } from 'react'
-import { trpc, getQueryClient } from '@/trpc/server';
-import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
-import { ClientGreeting } from './api/trpc/[trpc]/client';
+const Page = () => {
+  const trpc = useTRPC();
 
-type Props = {}
+  // This is correct for @trpc/tanstack-react-query
+ 
 
-const Page = async (props: Props) => {
+  const invoke = useMutation( trpc.invoke.mutationOptions({
 
-  const queryClient = getQueryClient()
+    onSuccess : ()=>{
+      toast.success("Background Job Started")
+    }
 
-  void queryClient.prefetchQuery(trpc.hello.queryOptions({
-    text : "Kunal Prefetch"
   }))
-  
-  return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <div>
-        <Suspense fallback={<p>Loading....</p>}>
-          <ClientGreeting/>
-        </Suspense>
-      </div>
-    </HydrationBoundary>
-  )
-}
 
-export default Page
+  return (
+    <div className="p-4 max-w-7xl mx-auto">
+      <Button disabled = {invoke.isPending} onClick={() => invoke.mutate({ text: "kunal" })}>
+        Invoke Background Job
+      </Button>
+    </div>
+  );
+};
+
+export default Page;
