@@ -1,17 +1,21 @@
 import { inngest } from "./client";
+import { Agent, openai, createAgent } from "@inngest/agent-kit";
 
 export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
   { event: "test/hello.world" },
-  async ({ event, step }) => {
-    // this the download step
-    await step.sleep("wait-a-moment", "5s");
+  async ({ event }) => {
+    const code_agent = createAgent({
+      name: "code-agent",
+      system: "You are an expert next.js developer.You write reable, maintainale code. You write simple Next.js $ React snippests",
+      model: openai({ model: "gpt-4o"}),
+    });
 
-     // this trascribe call
-    await step.sleep("wait-a-moment", "10s");
-
-     // Call for summary
-    await step.sleep("wait-a-moment", "10s");
-    return { message: `Hello ${event.data.email}!` };
+    const { output } = await code_agent.run(
+    `Summaize following text:${event.data.value}`,
+    );
+    console.log(output);
+     
+    return {output};
   },
 );
