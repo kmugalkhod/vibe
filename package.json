@@ -10,6 +10,7 @@
     "reset-db": "rm -rf prisma/migrations && npx prisma migrate dev --name init && npx prisma migrate reset --force"
   },
   "dependencies": {
+    "@e2b/code-interpreter": "^2.3.1",
     "@hookform/resolvers": "^5.2.2",
     "@inngest/agent-kit": "^0.13.2",
     "@prisma/adapter-pg": "^7.0.0",
@@ -50,6 +51,7 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
+    "e2b": "^2.8.1",
     "embla-carousel-react": "^8.6.0",
     "inngest": "^3.46.0",
     "input-otp": "^1.4.2",
