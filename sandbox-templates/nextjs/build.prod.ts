@@ -4,9 +4,10 @@ import 'dotenv/config'
 
 async function main() {
   await Template.build(template, {
-    alias: 'vibe-vyank-dev',
+    alias: 'vibe-nextjs-prod',
+    cpuCount: 4,
+    memoryMB: 4096,
     onBuildLogs: defaultBuildLogger(),
-    apiKey: process.env.E2B_API_KEY,
   });
 }
 
